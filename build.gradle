@@ -1,0 +1,15 @@
+group 'com.marklogic'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+repositories {
+    jcenter()
+    maven { url "http://developer.marklogic.com/maven2/" }
+}
+
+dependencies {
+    compile 'com.marklogic:marklogic-spring-batch-infrastructure:0.9.0'
+    testCompile 'com.marklogic:marklogic-spring-batch-test:0.9.0'
+    testCompile "com.marklogic:ml-junit:2.6.0"
+}
