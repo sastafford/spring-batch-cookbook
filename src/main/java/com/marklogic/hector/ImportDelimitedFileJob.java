@@ -38,8 +38,6 @@ public class ImportDelimitedFileJob extends LoggingObject {
     @Autowired
     DatabaseClientProvider databaseClientProvider;
 
-    private String[] headers;
-
     @Bean
     @Primary
     public Job job(JobBuilderFactory jobBuilderFactory,
@@ -57,7 +55,9 @@ public class ImportDelimitedFileJob extends LoggingObject {
             @Value("#{jobParameters['delimited_root_name']}") String delimitedRootName,
             @Value("#{jobParameters['uri_id']}") String uriId,
             @Value("#{jobParameters['output_collections']}") String[] collections,
-            @Value("#{jobParameters['output_transform']}") String outputTransform) throws Exception {
+            @Value("#{jobParameters['output_transform']}") String outputTransform,
+            @Value("#{jobParameters['thread_count']}") Long threadCount,
+            @Value("#{jobParameters['chunk_size']}") Long chunkSize) throws Exception {
 
         FlatFileItemReader<Map<String, Object>> itemReader = new FlatFileItemReader<Map<String, Object>>();
         itemReader.setResource(new FileSystemResource(inputFilePath));
@@ -85,7 +85,6 @@ public class ImportDelimitedFileJob extends LoggingObject {
             public void handleLine(String line) {
                 FieldSet fs = tokenizer.tokenize(line);
                 tokenizer.setNames(fs.getValues());
-                //itemProcessor.setHeaders(fs.getValues());
             }
         });
         itemReader.setLinesToSkip(1);
@@ -108,12 +107,12 @@ public class ImportDelimitedFileJob extends LoggingObject {
 
         TempRestBatchWriter batchWriter = new TempRestBatchWriter(databaseClientProvider.getDatabaseClient());
         batchWriter.setReturnFormat(Format.XML);
-        batchWriter.setThreadCount(1);
+        batchWriter.setThreadCount(threadCount.intValue());
         MarkLogicItemWriter itemWriter = new MarkLogicItemWriter(batchWriter);
 
 
         return stepBuilderFactory.get("step")
-                .<Map<String, Object>, DocumentWriteOperation>chunk(100)
+                .<Map<String, Object>, DocumentWriteOperation>chunk(chunkSize.intValue())
                 .reader(itemReader)
                 .processor(itemProcessor)
                 .writer(itemWriter)
