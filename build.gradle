@@ -1,7 +1,10 @@
+plugins {
+    id "com.marklogic.ml-gradle" version "2.5.0"
+    id "java"
+}
+
 group 'com.marklogic'
 version '1.0-SNAPSHOT'
-
-apply plugin: 'java'
 
 repositories {
     jcenter()
