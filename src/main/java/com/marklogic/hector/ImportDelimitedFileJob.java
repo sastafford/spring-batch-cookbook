@@ -56,8 +56,8 @@ public class ImportDelimitedFileJob extends LoggingObject {
             @Value("#{jobParameters['uri_id']}") String uriId,
             @Value("#{jobParameters['output_collections']}") String[] collections,
             @Value("#{jobParameters['output_transform']}") String outputTransform,
-            @Value("#{jobParameters['thread_count']}") Long threadCount,
-            @Value("#{jobParameters['chunk_size']}") Long chunkSize) throws Exception {
+            @Value("#{jobParameters['thread_count'] ?: 4L}") Long threadCount,
+            @Value("#{jobParameters['chunk_size'] ?: 5L}") Long chunkSize) throws Exception {
 
         FlatFileItemReader<Map<String, Object>> itemReader = new FlatFileItemReader<Map<String, Object>>();
         itemReader.setResource(new FileSystemResource(inputFilePath));
