@@ -1,18 +1,52 @@
 plugins {
     id "com.marklogic.ml-gradle" version "2.5.0"
     id "java"
+    id "maven-publish"
 }
 
 group 'com.marklogic'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 repositories {
     jcenter()
     maven { url "http://developer.marklogic.com/maven2/" }
+    mavenLocal()
 }
 
 dependencies {
     compile 'com.marklogic:marklogic-spring-batch-infrastructure:0.9.0'
     testCompile 'com.marklogic:marklogic-spring-batch-test:0.9.0'
     testCompile "com.marklogic:ml-junit:2.6.0"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    baseName = project.name
+    version = version
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+publishing {
+    publications {
+        mainJavaWithSources(MavenPublication) {
+            groupId group
+            artifactId project.name
+            version version
+            from components.java
+            artifact sourcesJar
+        }
+    }
+}
+
+task importBabyNames(type: JavaExec) {
+    main = 'org.springframework.batch.core.launch.support.CommandLineJobRunner'
+    classpath = sourceSets.main.runtimeClasspath
+    args = ["com.marklogic.hector.ImportDelimitedFileJob", "job",
+            "input_file_path=./src/test/resources/Most_Popular_Baby_Names_NYC.csv",
+            "delimited_root_name=baby-name",
+            "document_type=xml",
+            "output_collections=baby-name",
+            "output_transform", "com.marklogic.hector.BabyNameColumnMapSerializer",
+            "thread_count=4",
+            "chunk_size=8"]
 }
