@@ -2,10 +2,13 @@ plugins {
     id "com.marklogic.ml-gradle" version "2.5.0"
     id "java"
     id "maven-publish"
+    id "application"
 }
 
 group 'com.marklogic'
 version '1.0'
+
+mainClassName = "org.springframework.batch.core.launch.support.CommandLineJobRunner"
 
 repositories {
     jcenter()
@@ -41,12 +44,10 @@ publishing {
 task importBabyNames(type: JavaExec) {
     main = 'org.springframework.batch.core.launch.support.CommandLineJobRunner'
     classpath = sourceSets.main.runtimeClasspath
-    args = ["com.marklogic.hector.ImportDelimitedFileJob", "job",
+    args = ["com.marklogic.hector.JobConfig", "job",
             "input_file_path=./src/test/resources/Most_Popular_Baby_Names_NYC.csv",
             "delimited_root_name=baby-name",
             "document_type=xml",
             "output_collections=baby-name",
-            "output_transform", "com.marklogic.hector.BabyNameColumnMapSerializer",
-            "thread_count=4",
-            "chunk_size=8"]
+            "output_transform", "com.marklogic.hector.BabyNameColumnMapSerializer"]
 }
