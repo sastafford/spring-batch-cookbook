@@ -6,6 +6,7 @@ import com.marklogic.client.helper.LoggingObject;
 import com.marklogic.client.io.Format;
 import com.marklogic.spring.batch.columnmap.ColumnMapSerializer;
 import com.marklogic.spring.batch.item.processor.ColumnMapProcessor;
+import com.marklogic.spring.batch.item.processor.support.UriGenerator;
 import com.marklogic.spring.batch.item.writer.MarkLogicItemWriter;
 import com.marklogic.spring.batch.item.writer.support.TempRestBatchWriter;
 import org.springframework.batch.core.Job;
@@ -53,7 +54,9 @@ public class ImportDelimitedFileJob extends LoggingObject {
             @Value("#{jobParameters['input_file_path']}") String inputFilePath,
             @Value("#{jobParameters['document_type']}") String documentType,
             @Value("#{jobParameters['delimited_root_name']}") String delimitedRootName,
+            @Value("#{jobParameters['item_processor']}") String itemProcessor,
             @Value("#{jobParameters['uri_id']}") String uriId,
+            @Value("#{jobParameters['uri_transform']}") String uriTransform,
             @Value("#{jobParameters['output_collections']}") String[] collections,
             @Value("#{jobParameters['output_transform']}") String outputTransform,
             @Value("#{jobParameters['thread_count'] ?: 4L}") Long threadCount,
@@ -94,16 +97,25 @@ public class ImportDelimitedFileJob extends LoggingObject {
         lineMapper.setLineTokenizer(tokenizer);
         itemReader.setLineMapper(lineMapper);
 
-        ColumnMapProcessor itemProcessor = null;
-        if (outputTransform == null) {
-            itemProcessor = new ColumnMapProcessor(new XmlStringColumnMapSerializer());
+        UriGenerator uriGenerator = null;
+        if (uriTransform == null) {
+            uriGenerator = new DelimitedFileUriGenerator(uriId);
         } else {
-            ColumnMapSerializer serializer = (ColumnMapSerializer) getSystemClassLoader().loadClass(outputTransform).newInstance();
-            itemProcessor = new ColumnMapProcessor(serializer);
+            uriGenerator = (UriGenerator) getSystemClassLoader().loadClass(uriTransform).newInstance();
         }
 
-        itemProcessor.setCollections(collections);
-        itemProcessor.setRootLocalName(delimitedRootName);
+        ColumnMapProcessor processor = null;
+        if (outputTransform == null) {
+            processor = new ColumnMapProcessor(new XmlStringColumnMapSerializer(), uriGenerator);
+        } else {
+            ColumnMapSerializer serializer = (ColumnMapSerializer) getSystemClassLoader().loadClass(outputTransform).newInstance();
+            processor = new ColumnMapProcessor(serializer, uriGenerator);
+        }
+
+
+
+        processor.setCollections(collections);
+        processor.setRootLocalName(delimitedRootName);
 
         TempRestBatchWriter batchWriter = new TempRestBatchWriter(databaseClientProvider.getDatabaseClient());
         batchWriter.setReturnFormat(Format.XML);
@@ -114,7 +126,7 @@ public class ImportDelimitedFileJob extends LoggingObject {
         return stepBuilderFactory.get("step")
                 .<Map<String, Object>, DocumentWriteOperation>chunk(chunkSize.intValue())
                 .reader(itemReader)
-                .processor(itemProcessor)
+                .processor(processor)
                 .writer(itemWriter)
                 .build();
     }

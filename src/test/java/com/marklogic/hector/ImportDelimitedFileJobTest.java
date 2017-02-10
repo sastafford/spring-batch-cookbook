@@ -40,6 +40,12 @@ public class ImportDelimitedFileJobTest extends AbstractJobRunnerTest {
         getClientTestHelper().assertCollectionSize("Expecting 13962 files in baby-name collection", "baby-name", 13962);
     }
 
+    @Test
+    public void ingestDelimitedBabyNamesWithUriTransformTest() throws Exception {
+        JobExecution jobExecution = getJobLauncherTestUtils().launchJob(getJobParametersWithUriTransform());
+        getClientTestHelper().assertCollectionSize("Expecting 13962 files in baby-name collection", "baby-name", 13962);
+    }
+
     protected JobParameters getJobParameters() {
         JobParametersBuilder jpb = new JobParametersBuilder();
         jpb.addString("input_file_path", ".\\src\\test\\resources\\Most_Popular_Baby_Names_NYC.csv");
@@ -59,6 +65,17 @@ public class ImportDelimitedFileJobTest extends AbstractJobRunnerTest {
         jpb.addString("output_transform", "com.marklogic.hector.BabyNameColumnMapSerializer");
         jpb.addLong("thread_count", threadCount);
         jpb.addLong("chunk_size", chunkSize);
+        return jpb.toJobParameters();
+    }
+
+    protected JobParameters getJobParametersWithUriTransform() {
+        JobParametersBuilder jpb = new JobParametersBuilder();
+        jpb.addString("input_file_path", ".\\src\\test\\resources\\Most_Popular_Baby_Names_NYC.csv");
+        jpb.addString("delimited_root_name", "baby-name");
+        jpb.addString("document_type", "xml");
+        jpb.addString("output_collections", "baby-name");
+        jpb.addString("output_transform", "com.marklogic.hector.BabyNameColumnMapSerializer");
+        jpb.addString("uri_transform", "com.marklogic.hector.BabyNameUriGenerator");
         return jpb.toJobParameters();
     }
 

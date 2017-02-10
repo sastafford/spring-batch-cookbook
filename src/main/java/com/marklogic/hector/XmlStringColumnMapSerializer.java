@@ -25,6 +25,6 @@ public class XmlStringColumnMapSerializer implements ColumnMapSerializer {
     //The strategy is to extend this class and overwrite this method.
     protected Map<String, Object> transformColumnMap(Map<String, Object> columnMap) {
         return columnMap;
-
     }
+
 }
