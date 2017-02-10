@@ -1,0 +1,1 @@
+build\install\hector\bin\hector.bat com.marklogic.hector.JobConfig job input_file_path=./src/test/resources/Most_Popular_Baby_Names_NYC.csv delimited_root_name=baby-name document_type=xml output_collections=baby-name chunk_size=100 thread_count=4 

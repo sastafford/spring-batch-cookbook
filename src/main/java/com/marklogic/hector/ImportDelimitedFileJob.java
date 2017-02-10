@@ -5,6 +5,7 @@ import com.marklogic.client.helper.DatabaseClientProvider;
 import com.marklogic.client.helper.LoggingObject;
 import com.marklogic.client.io.Format;
 import com.marklogic.spring.batch.columnmap.ColumnMapSerializer;
+import com.marklogic.spring.batch.columnmap.JacksonColumnMapSerializer;
 import com.marklogic.spring.batch.item.processor.ColumnMapProcessor;
 import com.marklogic.spring.batch.item.processor.support.UriGenerator;
 import com.marklogic.spring.batch.item.writer.MarkLogicItemWriter;
@@ -52,7 +53,7 @@ public class ImportDelimitedFileJob extends LoggingObject {
             StepBuilderFactory stepBuilderFactory,
             DatabaseClientProvider databaseClientProvider,
             @Value("#{jobParameters['input_file_path']}") String inputFilePath,
-            @Value("#{jobParameters['document_type']}") String documentType,
+            @Value("#{jobParameters['document_type'] ?: \"xml\"}") String documentType,
             @Value("#{jobParameters['delimited_root_name']}") String delimitedRootName,
             @Value("#{jobParameters['item_processor']}") String itemProcessor,
             @Value("#{jobParameters['uri_id']}") String uriId,
@@ -106,19 +107,21 @@ public class ImportDelimitedFileJob extends LoggingObject {
 
         ColumnMapProcessor processor = null;
         if (outputTransform == null) {
-            processor = new ColumnMapProcessor(new XmlStringColumnMapSerializer(), uriGenerator);
+            if ("XML".equals(documentType.toUpperCase())) {
+                processor = new ColumnMapProcessor(new XmlStringColumnMapSerializer(), uriGenerator);
+            } else if ("JSON".equals(documentType.toUpperCase())) {
+                processor = new ColumnMapProcessor(new JacksonColumnMapSerializer(), uriGenerator);
+            }
         } else {
             ColumnMapSerializer serializer = (ColumnMapSerializer) getSystemClassLoader().loadClass(outputTransform).newInstance();
             processor = new ColumnMapProcessor(serializer, uriGenerator);
         }
 
-
-
         processor.setCollections(collections);
         processor.setRootLocalName(delimitedRootName);
 
         TempRestBatchWriter batchWriter = new TempRestBatchWriter(databaseClientProvider.getDatabaseClient());
-        batchWriter.setReturnFormat(Format.XML);
+        batchWriter.setReturnFormat(Format.valueOf(documentType.toUpperCase()));
         batchWriter.setThreadCount(threadCount.intValue());
         MarkLogicItemWriter itemWriter = new MarkLogicItemWriter(batchWriter);
 
