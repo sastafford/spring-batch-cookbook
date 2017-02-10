@@ -75,11 +75,12 @@ bintray {
 
 task importBabyNames(type: JavaExec) {
     main = 'org.springframework.batch.core.launch.support.CommandLineJobRunner'
-    classpath = sourceSets.main.runtimeClasspath
+    classpath = sourceSets.test.runtimeClasspath
     args = ["com.marklogic.hector.JobConfig", "job",
             "input_file_path=./src/test/resources/Most_Popular_Baby_Names_NYC.csv",
             "delimited_root_name=baby-name",
             "document_type=xml",
             "output_collections=baby-name",
-            "output_transform", "com.marklogic.hector.BabyNameColumnMapSerializer"]
+            "output_transform=com.marklogic.hector.BabyNameColumnMapSerializer",
+            "uri_transform=com.marklogic.hector.BabyNameUriGenerator"]
 }
