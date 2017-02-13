@@ -40,7 +40,7 @@ public class ImportDelimitedFileJob extends LoggingObject {
     @Autowired
     DatabaseClientProvider databaseClientProvider;
 
-    @Bean
+    @Bean(name = "hector")
     @Primary
     public Job job(JobBuilderFactory jobBuilderFactory,
                    Step importDelimitedFileStep) {
