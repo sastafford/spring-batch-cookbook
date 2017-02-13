@@ -1,33 +1,29 @@
 # Hector - Ingest Delimited Files into MarkLogic
 
-## What is Hector?
+Hector is a command line program that ingests delimited text files into MarkLogic.  Hector is easily extensible allowing developers to transform delimited records before ingesting data into MarkLogic while still providing high performance.  
 
-Hector is the code name for a program that will ingest a delimited text file into MarkLogic.  It is built using [MarkLogic Spring Batch](https://github.com/sastafford/marklogic-spring-batch) making it extensible.  It provides the ability of data transformation while achieving high levels of performance.  
- 
+Hector is built using the [Spring Batch](http://docs.spring.io/spring-batch/trunk/reference/html/) framework and the [MarkLogic Spring Batch](https://github.com/sastafford/marklogic-spring-batch) extensions.  
+
+## Prerequisites
+
+ * JDK 1.8
+ * MarkLogic 8+
+ * Gradle - know how it is used
  
 ## How do I install Hector?
 
-1) Install the hector distribution.  The installation will be deployed under ./build/install directory.
+1) Clone or download this project.  
 
-     gradlew installDist
+2) Create a MarkLogic app server and database for testing purposes.  Review gradle.properties before deploying
 
-2) Make sure you have a job.properties file defined with MarkLogic connection configuration. 
+     gradlew mlDeploy
 
-3) Command line parameters include the following 
+3) Run the gradle tests.  Check the job.properties under src/test/resources to make sure it is configured correctly. All tests should pass.
 
- * input_file_path
- * delimited_root_name
- * document_type
- * output_collections
- * thread_size (optional)
- * chunk_size (optional)
+     gradlew test
 
-## Example
+4) Create a distribution
 
-    hector.bat com.marklogic.hector.JobConfig job input_file_path=./src/test/resources/Most_Popular_Baby_Names_NYC.csv delimited_root_name=baby document_type=xml output_collections=baby
-    
-## Example with Transform
+    gradlew distZip
 
-A transform can be defined by subclassing the XmlStringColumnMapSerializer.  See the BabyNameColumnMapSerializer for an example.  
 
-    hector.bat com.marklogic.hector.JobConfig job input_file_path=./src/test/resources/Most_Popular_Baby_Names_NYC.csv delimited_root_name=baby document_type=xml output_collections=baby output_transform=com.marklogic.hector.BabyNameColumnMapSerializer

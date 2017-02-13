@@ -20,19 +20,18 @@ plugins {
 apply plugin: "com.jfrog.bintray"
 
 group 'com.marklogic'
-version '1.1.0'
+version '1.2.0'
 
-mainClassName = "org.springframework.batch.core.launch.support.CommandLineJobRunner"
+mainClassName = "com.marklogic.hector.CommandLineJobRunner"
 
 repositories {
     jcenter()
     maven { url "http://developer.marklogic.com/maven2/" }
-    mavenLocal()
 }
 
 dependencies {
     compile 'com.marklogic:marklogic-spring-batch-infrastructure:0.10.0'
-    testCompile 'com.marklogic:marklogic-spring-batch-test:0.9.0'
+    testCompile 'com.marklogic:marklogic-spring-batch-test:0.10.0'
     testCompile "com.marklogic:ml-junit:2.6.0"
 }
 
@@ -74,13 +73,13 @@ bintray {
 }
 
 task importBabyNames(type: JavaExec) {
-    main = 'org.springframework.batch.core.launch.support.CommandLineJobRunner'
+    main = 'com.marklogic.hector.CommandLineJobRunner'
     classpath = sourceSets.test.runtimeClasspath
-    args = ["com.marklogic.hector.JobConfig", "job",
-            "input_file_path=./src/test/resources/Most_Popular_Baby_Names_NYC.csv",
+    args = ["input_file_path=./src/test/resources/Most_Popular_Baby_Names_NYC.csv",
             "delimited_root_name=baby-name",
             "document_type=xml",
             "output_collections=baby-name",
-            "output_transform=com.marklogic.hector.BabyNameColumnMapSerializer",
-            "uri_transform=com.marklogic.hector.BabyNameUriGenerator"]
+            "chunk_size=5",
+            "output_transform=com.marklogic.hector.examples.babies.BabyNameColumnMapSerializer"]
+            //"uri_transform=com.marklogic.hector.examples.babies.BabyNameUriGenerator"]
 }

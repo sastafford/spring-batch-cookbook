@@ -1,4 +1,4 @@
-package com.marklogic.hector;
+package com.marklogic.hector.examples.babies;
 
 import com.marklogic.spring.batch.item.processor.support.UriGenerator;
 
