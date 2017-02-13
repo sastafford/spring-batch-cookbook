@@ -54,7 +54,7 @@ public class ImportDelimitedFileJob extends LoggingObject {
             DatabaseClientProvider databaseClientProvider,
             @Value("#{jobParameters['input_file_path']}") String inputFilePath,
             @Value("#{jobParameters['document_type'] ?: \"xml\"}") String documentType,
-            @Value("#{jobParameters['delimited_root_name']}") String delimitedRootName,
+            @Value("#{jobParameters['delimited_root_name'] ?: \"record\"}") String delimitedRootName,
             @Value("#{jobParameters['item_processor']}") String itemProcessor,
             @Value("#{jobParameters['uri_id']}") String uriId,
             @Value("#{jobParameters['uri_transform']}") String uriTransform,
