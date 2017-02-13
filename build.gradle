@@ -27,12 +27,11 @@ mainClassName = "com.marklogic.hector.CommandLineJobRunner"
 repositories {
     jcenter()
     maven { url "http://developer.marklogic.com/maven2/" }
-    mavenLocal()
 }
 
 dependencies {
     compile 'com.marklogic:marklogic-spring-batch-infrastructure:0.10.0'
-    testCompile 'com.marklogic:marklogic-spring-batch-test:0.9.0'
+    testCompile 'com.marklogic:marklogic-spring-batch-test:0.10.0'
     testCompile "com.marklogic:ml-junit:2.6.0"
 }
 
@@ -80,6 +79,7 @@ task importBabyNames(type: JavaExec) {
             "delimited_root_name=baby-name",
             "document_type=xml",
             "output_collections=baby-name",
-            "output_transform=com.marklogic.hector.examples.babies.BabyNameColumnMapSerializer",
-            "uri_transform=com.marklogic.hector.examples.babies.BabyNameUriGenerator"]
+            "chunk_size=5",
+            "output_transform=com.marklogic.hector.examples.babies.BabyNameColumnMapSerializer"]
+            //"uri_transform=com.marklogic.hector.examples.babies.BabyNameUriGenerator"]
 }
