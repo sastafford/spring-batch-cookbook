@@ -15,7 +15,7 @@ public class XmlStringColumnMapSerializer implements ColumnMapSerializer {
         content = "<" + rootName + ">\n";
 
         for (Map.Entry<String, Object> entry : transformColumnMap(columnMap).entrySet()) {
-            String elName = entry.getKey().replaceAll("[^A-Za-z0-9]", "");
+            String elName = entry.getKey().replaceAll("[^A-Za-z0-9\\_\\-]", "");
             content += "<" + elName + ">" + StringEscapeUtils.escapeXml11(entry.getValue().toString()) + "</" + elName + ">\n";
         }
 
