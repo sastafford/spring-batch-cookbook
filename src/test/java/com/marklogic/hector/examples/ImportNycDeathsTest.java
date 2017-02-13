@@ -22,6 +22,6 @@ public class ImportNycDeathsTest extends AbstractJobRunnerTest {
     @Test
     public void ingestDelimitedBabyNamesDefaultThreadAndChunkSizeTest() throws Exception {
         JobExecution jobExecution = getJobLauncherTestUtils().launchJob(jpb.toJobParameters());
-        getClientTestHelper().assertCollectionSize("Expecting 199 files in baby-name collection", "baby-name", 199);
+        getClientTestHelper().assertCollectionSize("Expecting 7 files in nyc collection", "nyc", 7);
     }
 }
