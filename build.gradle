@@ -20,7 +20,7 @@ plugins {
 apply plugin: "com.jfrog.bintray"
 
 group 'com.marklogic'
-version '1.2.0'
+version '1.2.1'
 
 mainClassName = "com.marklogic.hector.CommandLineJobRunner"
 
@@ -30,8 +30,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.marklogic:marklogic-spring-batch-infrastructure:0.10.0'
-    testCompile 'com.marklogic:marklogic-spring-batch-test:0.10.0'
+    compile 'com.marklogic:marklogic-spring-batch-infrastructure:0.10.2'
+    testCompile 'com.marklogic:marklogic-spring-batch-test:0.10.2'
     testCompile "com.marklogic:ml-junit:2.6.0"
 }
 
