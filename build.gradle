@@ -11,7 +11,7 @@ buildscript {
 
 
 plugins {
-    id "com.marklogic.ml-gradle" version "2.5.0"
+    id "com.marklogic.ml-gradle" version "2.6.0"
     id "java"
     id "maven-publish"
     id "application"
@@ -20,7 +20,7 @@ plugins {
 apply plugin: "com.jfrog.bintray"
 
 group 'com.marklogic'
-version '1.2.1'
+version '1.3.0'
 
 mainClassName = "com.marklogic.hector.CommandLineJobRunner"
 
@@ -30,8 +30,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.marklogic:marklogic-spring-batch-infrastructure:0.10.2'
-    testCompile 'com.marklogic:marklogic-spring-batch-test:0.10.2'
+    compile 'com.marklogic:marklogic-spring-batch-infrastructure:0.11.0'
+    testCompile 'com.marklogic:marklogic-spring-batch-test:0.11.0'
     testCompile "com.marklogic:ml-junit:2.6.0"
 }
 
