@@ -1,15 +1,14 @@
 package com.marklogic.hector;
 
 import com.marklogic.client.document.DocumentWriteOperation;
-import com.marklogic.client.helper.DatabaseClientProvider;
-import com.marklogic.client.helper.LoggingObject;
+import com.marklogic.client.ext.helper.DatabaseClientProvider;
 import com.marklogic.client.io.Format;
 import com.marklogic.spring.batch.columnmap.ColumnMapSerializer;
 import com.marklogic.spring.batch.columnmap.JacksonColumnMapSerializer;
+import com.marklogic.spring.batch.config.MarkLogicBatchConfiguration;
 import com.marklogic.spring.batch.item.processor.ColumnMapProcessor;
 import com.marklogic.spring.batch.item.processor.support.UriGenerator;
 import com.marklogic.spring.batch.item.writer.MarkLogicItemWriter;
-import com.marklogic.spring.batch.item.writer.support.TempRestBatchWriter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -25,6 +24,7 @@ import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.validation.BindException;
@@ -35,7 +35,8 @@ import java.util.Map;
 import static java.lang.ClassLoader.getSystemClassLoader;
 
 @EnableBatchProcessing
-public class ImportDelimitedFileJob extends LoggingObject {
+@Import(MarkLogicBatchConfiguration.class)
+public class ImportDelimitedFileJob {
 
     @Autowired
     DatabaseClientProvider databaseClientProvider;
@@ -119,10 +120,7 @@ public class ImportDelimitedFileJob extends LoggingObject {
         processor.setCollections(collections);
         processor.setRootLocalName(delimitedRootName);
 
-        TempRestBatchWriter batchWriter = new TempRestBatchWriter(databaseClientProvider.getDatabaseClient());
-        batchWriter.setReturnFormat(Format.valueOf(documentType.toUpperCase()));
-        batchWriter.setThreadCount(threadCount.intValue());
-        MarkLogicItemWriter itemWriter = new MarkLogicItemWriter(batchWriter);
+        MarkLogicItemWriter itemWriter = new MarkLogicItemWriter(databaseClientProvider.getDatabaseClient());
 
 
         return stepBuilderFactory.get("step")
