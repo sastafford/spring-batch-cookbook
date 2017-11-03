@@ -9,6 +9,8 @@ import com.marklogic.spring.batch.config.MarkLogicBatchConfiguration;
 import com.marklogic.spring.batch.item.processor.ColumnMapProcessor;
 import com.marklogic.spring.batch.item.processor.support.UriGenerator;
 import com.marklogic.spring.batch.item.writer.MarkLogicItemWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -38,6 +40,8 @@ import static java.lang.ClassLoader.getSystemClassLoader;
 @Import(MarkLogicBatchConfiguration.class)
 public class ImportDelimitedFileJob {
 
+    private final static Logger logger = LoggerFactory.getLogger(MarkLogicItemWriter.class);
+
     @Autowired
     DatabaseClientProvider databaseClientProvider;
 
@@ -58,10 +62,10 @@ public class ImportDelimitedFileJob {
             @Value("#{jobParameters['delimited_root_name'] ?: \"record\"}") String delimitedRootName,
             @Value("#{jobParameters['uri_id']}") String uriId,
             @Value("#{jobParameters['uri_transform']}") String uriTransform,
-            @Value("#{jobParameters['output_collections']}") String[] collections,
+            @Value("#{jobParameters['output_collections']}") String collections,
             @Value("#{jobParameters['output_transform']}") String outputTransform,
-            @Value("#{jobParameters['thread_count'] ?: 4L}") Long threadCount,
-            @Value("#{jobParameters['chunk_size'] ?: 5L}") Long chunkSize) throws Exception {
+            @Value("#{jobParameters['thread_count'] ?: 4}") Integer threadCount,
+            @Value("#{jobParameters['chunk_size'] ?: 100}") Integer chunkSize) throws Exception {
 
         FlatFileItemReader<Map<String, Object>> itemReader = new FlatFileItemReader<Map<String, Object>>();
         itemReader.setResource(new FileSystemResource(inputFilePath));
@@ -117,14 +121,18 @@ public class ImportDelimitedFileJob {
             processor = new ColumnMapProcessor(serializer, uriGenerator);
         }
 
-        processor.setCollections(collections);
+        //processor.setCollections(collections);
         processor.setRootLocalName(delimitedRootName);
 
         MarkLogicItemWriter itemWriter = new MarkLogicItemWriter(databaseClientProvider.getDatabaseClient());
-
+        chunkSize = 500;
+        itemWriter.setBatchSize(chunkSize);
+        itemWriter.setThreadCount(threadCount);
+        itemWriter.setContentFormat(Format.XML);
+        logger.warn("Chunk: " + chunkSize);
 
         return stepBuilderFactory.get("step")
-                .<Map<String, Object>, DocumentWriteOperation>chunk(chunkSize.intValue())
+                .<Map<String, Object>, DocumentWriteOperation>chunk(chunkSize)
                 .reader(itemReader)
                 .processor(processor)
                 .writer(itemWriter)

@@ -78,11 +78,12 @@ task importBabyNames(type: JavaExec) {
     classpath = sourceSets.test.runtimeClasspath
     args = ["--job_path", "com.marklogic.hector.ImportDelimitedFileJob",
             "--job_id", "hector",
-            "--input_file_path", "./src/test/resources/Most_Popular_Baby_Names_NYC.csv",
             "--delimited_root_name", "baby-name",
             "--document_type", "xml",
             "--output_collections", "baby-name",
-            "--chunk_size", "5",
-            "--output_transform", "com.marklogic.hector.examples.babies.BabyNameColumnMapSerializer"]
+            "--chunk_size", "500",
+            "--thread_count", "4",
+            "--output_transform", "com.marklogic.hector.examples.babies.BabyNameColumnMapSerializer",
+            "--input_file_path", "./src/test/resources/Most_Popular_Baby_Names_NYC.csv"]
             //"uri_transform=com.marklogic.hector.examples.babies.BabyNameUriGenerator"]
 }
