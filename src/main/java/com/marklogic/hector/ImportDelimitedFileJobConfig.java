@@ -45,7 +45,7 @@ public class ImportDelimitedFileJobConfig {
     @Autowired
     DatabaseClientProvider databaseClientProvider;
 
-    @Bean(name = "hector")
+    @Bean(name = "importDelimitedFile")
     @Primary
     public Job job(JobBuilderFactory jobBuilderFactory,
                    Step importDelimitedFileStep) {
@@ -121,7 +121,7 @@ public class ImportDelimitedFileJobConfig {
             processor = new ColumnMapProcessor(serializer, uriGenerator);
         }
 
-        //processor.setCollections(collections);
+        processor.setCollections(new String[] { collections });
         processor.setRootLocalName(delimitedRootName);
 
         MarkLogicItemWriter itemWriter = new MarkLogicItemWriter(databaseClientProvider.getDatabaseClient());
