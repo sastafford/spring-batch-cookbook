@@ -1,6 +1,6 @@
 package com.marklogic.hector.examples;
 
-import com.marklogic.hector.ImportDelimitedFileJobConfig;
+import com.marklogic.batch.delimited.ImportDelimitedFileJobConfig;
 import com.marklogic.junit.Fragment;
 import com.marklogic.spring.batch.test.AbstractJobRunnerTest;
 import org.junit.Before;

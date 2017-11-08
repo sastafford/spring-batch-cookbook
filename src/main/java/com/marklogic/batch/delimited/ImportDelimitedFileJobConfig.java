@@ -1,4 +1,4 @@
-package com.marklogic.hector;
+package com.marklogic.batch.delimited;
 
 import com.marklogic.client.document.DocumentWriteOperation;
 import com.marklogic.client.ext.helper.DatabaseClientProvider;
@@ -17,6 +17,7 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineCallbackHandler;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
@@ -49,7 +50,10 @@ public class ImportDelimitedFileJobConfig {
     @Primary
     public Job job(JobBuilderFactory jobBuilderFactory,
                    Step importDelimitedFileStep) {
-        return jobBuilderFactory.get("importDelimitedFile").start(importDelimitedFileStep).build();
+        return jobBuilderFactory.get("importDelimitedFile")
+                .start(importDelimitedFileStep)
+                .incrementer(new RunIdIncrementer())
+                .build();
     }
 
     @Bean

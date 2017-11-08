@@ -1,4 +1,4 @@
-package com.marklogic.hector;
+package com.marklogic.batch.delimited;
 
 import com.marklogic.spring.batch.columnmap.ColumnMapSerializer;
 import org.apache.commons.lang3.StringEscapeUtils;

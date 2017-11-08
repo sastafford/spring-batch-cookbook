@@ -1,6 +1,6 @@
 package com.marklogic.hector.examples.babies;
 
-import com.marklogic.hector.XmlStringColumnMapSerializer;
+import com.marklogic.batch.delimited.XmlStringColumnMapSerializer;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

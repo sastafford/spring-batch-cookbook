@@ -76,8 +76,9 @@ bintray {
 task importBabyNames(type: JavaExec) {
     main = 'com.marklogic.spring.batch.core.launch.support.CommandLineJobRunner'
     classpath = sourceSets.test.runtimeClasspath
-    args = ["--job_path", "com.marklogic.hector.ImportDelimitedFileJob",
-            "--job_id", "hector",
+    args = ["--job_path", "com.marklogic.batch.JobConfig",
+            "--job_id", "importDelimitedFile",
+            "--next",
             "--delimited_root_name", "baby-name",
             "--document_type", "xml",
             "--output_collections", "baby-name",
