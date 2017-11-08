@@ -1,6 +1,6 @@
 package com.marklogic.hector.examples;
 
-import com.marklogic.hector.ImportDelimitedFileJob;
+import com.marklogic.hector.ImportDelimitedFileJobConfig;
 import com.marklogic.junit.Fragment;
 import com.marklogic.spring.batch.test.AbstractJobRunnerTest;
 import org.junit.Before;
@@ -9,7 +9,7 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.test.context.ContextConfiguration;
 
-@ContextConfiguration(classes = { ImportDelimitedFileJob.class })
+@ContextConfiguration(classes = {ImportDelimitedFileJobConfig.class})
 public class ImportNycBabiesTest extends AbstractJobRunnerTest {
 
     private JobParametersBuilder jpb = new JobParametersBuilder();

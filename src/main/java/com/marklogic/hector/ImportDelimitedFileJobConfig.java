@@ -38,7 +38,7 @@ import static java.lang.ClassLoader.getSystemClassLoader;
 
 @EnableBatchProcessing
 @Import(MarkLogicBatchConfiguration.class)
-public class ImportDelimitedFileJob {
+public class ImportDelimitedFileJobConfig {
 
     private final static Logger logger = LoggerFactory.getLogger(MarkLogicItemWriter.class);
 
