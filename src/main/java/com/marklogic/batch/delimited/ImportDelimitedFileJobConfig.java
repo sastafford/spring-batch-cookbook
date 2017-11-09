@@ -2,15 +2,14 @@ package com.marklogic.batch.delimited;
 
 import com.marklogic.client.document.DocumentWriteOperation;
 import com.marklogic.client.ext.helper.DatabaseClientProvider;
-import com.marklogic.client.io.Format;
 import com.marklogic.spring.batch.columnmap.ColumnMapSerializer;
 import com.marklogic.spring.batch.columnmap.JacksonColumnMapSerializer;
+import com.marklogic.spring.batch.columnmap.XmlStringColumnMapSerializer;
 import com.marklogic.spring.batch.config.MarkLogicBatchConfiguration;
 import com.marklogic.spring.batch.item.processor.ColumnMapProcessor;
 import com.marklogic.spring.batch.item.processor.support.UriGenerator;
 import com.marklogic.spring.batch.item.writer.MarkLogicItemWriter;
 import com.marklogic.spring.batch.item.writer.support.DefaultUriTransformer;
-import com.marklogic.spring.batch.item.writer.support.UriTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;

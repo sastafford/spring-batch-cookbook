@@ -74,7 +74,7 @@ public class ImportNycBabiesTest extends AbstractJobRunnerTest {
         jpb.addString("uri_id", "NM");
         JobExecution jobExecution = getJobLauncherTestUtils().launchJob(jpb.toJobParameters());
         getClientTestHelper().assertCollectionSize("Expecting 2811 files in baby-name collection", "baby-name", 199);
-        getClientTestHelper().parseUri("HAZEL", "baby-name");
+        getClientTestHelper().parseUri("HAZEL.xml", "baby-name");
     }
 
 }
