@@ -9,6 +9,8 @@ import com.marklogic.spring.batch.config.MarkLogicBatchConfiguration;
 import com.marklogic.spring.batch.item.processor.ColumnMapProcessor;
 import com.marklogic.spring.batch.item.processor.support.UriGenerator;
 import com.marklogic.spring.batch.item.writer.MarkLogicItemWriter;
+import com.marklogic.spring.batch.item.writer.support.DefaultUriTransformer;
+import com.marklogic.spring.batch.item.writer.support.UriTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -71,6 +73,8 @@ public class ImportDelimitedFileJobConfig {
             @Value("#{jobParameters['thread_count'] ?: 4}") Integer threadCount,
             @Value("#{jobParameters['chunk_size'] ?: 100}") Integer chunkSize) throws Exception {
 
+        logger.info(inputFilePath);
+
         FlatFileItemReader<Map<String, Object>> itemReader = new FlatFileItemReader<Map<String, Object>>();
         itemReader.setResource(new FileSystemResource(inputFilePath));
         DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(DelimitedLineTokenizer.DELIMITER_COMMA);
@@ -125,15 +129,13 @@ public class ImportDelimitedFileJobConfig {
             processor = new ColumnMapProcessor(serializer, uriGenerator);
         }
 
-        processor.setCollections(new String[] { collections });
+        processor.setCollections(new String[]{collections});
         processor.setRootLocalName(delimitedRootName);
 
         MarkLogicItemWriter itemWriter = new MarkLogicItemWriter(databaseClientProvider.getDatabaseClient());
-        chunkSize = 500;
         itemWriter.setBatchSize(chunkSize);
         itemWriter.setThreadCount(threadCount);
-        itemWriter.setContentFormat(Format.XML);
-        logger.warn("Chunk: " + chunkSize);
+        itemWriter.setUriTransformer(new DefaultUriTransformer("", "." + documentType.toLowerCase(), ""));
 
         return stepBuilderFactory.get("step")
                 .<Map<String, Object>, DocumentWriteOperation>chunk(chunkSize)

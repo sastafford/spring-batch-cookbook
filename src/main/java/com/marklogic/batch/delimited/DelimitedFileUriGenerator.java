@@ -22,4 +22,5 @@ public class DelimitedFileUriGenerator implements UriGenerator<Map<String, Objec
         }
 
     }
+
 }
