@@ -1,4 +1,4 @@
-package com.marklogic.hector;
+package com.marklogic.batch.delimited;
 
 import com.marklogic.spring.batch.item.processor.support.UriGenerator;
 
@@ -22,4 +22,5 @@ public class DelimitedFileUriGenerator implements UriGenerator<Map<String, Objec
         }
 
     }
+
 }

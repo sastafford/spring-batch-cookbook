@@ -1,21 +1,24 @@
-package com.marklogic.hector;
+package com.marklogic.batch.delimited;
 
 import com.marklogic.client.document.DocumentWriteOperation;
-import com.marklogic.client.helper.DatabaseClientProvider;
-import com.marklogic.client.helper.LoggingObject;
-import com.marklogic.client.io.Format;
+import com.marklogic.client.ext.helper.DatabaseClientProvider;
 import com.marklogic.spring.batch.columnmap.ColumnMapSerializer;
 import com.marklogic.spring.batch.columnmap.JacksonColumnMapSerializer;
+import com.marklogic.spring.batch.columnmap.XmlStringColumnMapSerializer;
+import com.marklogic.spring.batch.config.MarkLogicBatchConfiguration;
 import com.marklogic.spring.batch.item.processor.ColumnMapProcessor;
 import com.marklogic.spring.batch.item.processor.support.UriGenerator;
 import com.marklogic.spring.batch.item.writer.MarkLogicItemWriter;
-import com.marklogic.spring.batch.item.writer.support.TempRestBatchWriter;
+import com.marklogic.spring.batch.item.writer.support.DefaultUriTransformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineCallbackHandler;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
@@ -25,6 +28,7 @@ import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.validation.BindException;
@@ -35,16 +39,22 @@ import java.util.Map;
 import static java.lang.ClassLoader.getSystemClassLoader;
 
 @EnableBatchProcessing
-public class ImportDelimitedFileJob extends LoggingObject {
+@Import(MarkLogicBatchConfiguration.class)
+public class ImportDelimitedFileJobConfig {
+
+    private final static Logger logger = LoggerFactory.getLogger(MarkLogicItemWriter.class);
 
     @Autowired
     DatabaseClientProvider databaseClientProvider;
 
-    @Bean(name = "hector")
+    @Bean(name = "importDelimitedFile")
     @Primary
     public Job job(JobBuilderFactory jobBuilderFactory,
                    Step importDelimitedFileStep) {
-        return jobBuilderFactory.get("importDelimitedFile").start(importDelimitedFileStep).build();
+        return jobBuilderFactory.get("importDelimitedFile")
+                .start(importDelimitedFileStep)
+                .incrementer(new RunIdIncrementer())
+                .build();
     }
 
     @Bean
@@ -57,10 +67,12 @@ public class ImportDelimitedFileJob extends LoggingObject {
             @Value("#{jobParameters['delimited_root_name'] ?: \"record\"}") String delimitedRootName,
             @Value("#{jobParameters['uri_id']}") String uriId,
             @Value("#{jobParameters['uri_transform']}") String uriTransform,
-            @Value("#{jobParameters['output_collections']}") String[] collections,
+            @Value("#{jobParameters['output_collections']}") String collections,
             @Value("#{jobParameters['output_transform']}") String outputTransform,
-            @Value("#{jobParameters['thread_count'] ?: 4L}") Long threadCount,
-            @Value("#{jobParameters['chunk_size'] ?: 5L}") Long chunkSize) throws Exception {
+            @Value("#{jobParameters['thread_count'] ?: 4}") Integer threadCount,
+            @Value("#{jobParameters['chunk_size'] ?: 100}") Integer chunkSize) throws Exception {
+
+        logger.info(inputFilePath);
 
         FlatFileItemReader<Map<String, Object>> itemReader = new FlatFileItemReader<Map<String, Object>>();
         itemReader.setResource(new FileSystemResource(inputFilePath));
@@ -116,17 +128,16 @@ public class ImportDelimitedFileJob extends LoggingObject {
             processor = new ColumnMapProcessor(serializer, uriGenerator);
         }
 
-        processor.setCollections(collections);
+        processor.setCollections(new String[]{collections});
         processor.setRootLocalName(delimitedRootName);
 
-        TempRestBatchWriter batchWriter = new TempRestBatchWriter(databaseClientProvider.getDatabaseClient());
-        batchWriter.setReturnFormat(Format.valueOf(documentType.toUpperCase()));
-        batchWriter.setThreadCount(threadCount.intValue());
-        MarkLogicItemWriter itemWriter = new MarkLogicItemWriter(batchWriter);
-
+        MarkLogicItemWriter itemWriter = new MarkLogicItemWriter(databaseClientProvider.getDatabaseClient());
+        itemWriter.setBatchSize(chunkSize);
+        itemWriter.setThreadCount(threadCount);
+        itemWriter.setUriTransformer(new DefaultUriTransformer("", "." + documentType.toLowerCase(), ""));
 
         return stepBuilderFactory.get("step")
-                .<Map<String, Object>, DocumentWriteOperation>chunk(chunkSize.intValue())
+                .<Map<String, Object>, DocumentWriteOperation>chunk(chunkSize)
                 .reader(itemReader)
                 .processor(processor)
                 .writer(itemWriter)
