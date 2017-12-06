@@ -6,6 +6,7 @@ import com.marklogic.spring.batch.columnmap.ColumnMapSerializer;
 import com.marklogic.spring.batch.columnmap.JacksonColumnMapSerializer;
 import com.marklogic.spring.batch.columnmap.XmlStringColumnMapSerializer;
 import com.marklogic.spring.batch.config.MarkLogicBatchConfiguration;
+import com.marklogic.spring.batch.config.MarkLogicConfiguration;
 import com.marklogic.spring.batch.item.processor.ColumnMapProcessor;
 import com.marklogic.spring.batch.item.processor.support.UriGenerator;
 import com.marklogic.spring.batch.item.writer.MarkLogicItemWriter;
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.validation.BindException;
 
@@ -39,7 +41,8 @@ import java.util.Map;
 import static java.lang.ClassLoader.getSystemClassLoader;
 
 @EnableBatchProcessing
-@Import(MarkLogicBatchConfiguration.class)
+@Import( {MarkLogicBatchConfiguration.class, MarkLogicConfiguration.class} )
+@PropertySource("classpath:job.properties")
 public class ImportDelimitedFileJobConfig {
 
     private final static Logger logger = LoggerFactory.getLogger(MarkLogicItemWriter.class);
