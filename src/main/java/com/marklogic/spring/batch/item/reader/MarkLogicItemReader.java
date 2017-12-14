@@ -6,6 +6,8 @@ import com.marklogic.client.document.DocumentPage;
 import com.marklogic.client.document.DocumentRecord;
 import com.marklogic.client.document.GenericDocumentManager;
 import com.marklogic.client.document.ServerTransform;
+import com.marklogic.client.query.QueryDefinition;
+import com.marklogic.client.query.StringQueryDefinition;
 import com.marklogic.client.query.StructuredQueryDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,31 +22,38 @@ public class MarkLogicItemReader implements QueryBatchListener, ItemStreamReader
 
     protected DatabaseClient databaseClient;
     protected QueryBatcher batcher;
-    protected StructuredQueryDefinition query;
+    protected StringQueryDefinition stringQueryDefinition;
+    protected StructuredQueryDefinition structuredQueryDefinition;
     protected Queue<DocumentRecord> documentQueue;
     protected GenericDocumentManager docMgr;
     protected DataMovementManager dataMovementManger;
     protected ServerTransform serverTransform;
 
-    public MarkLogicItemReader(DatabaseClient databaseClient, StructuredQueryDefinition queryDefinition) {
+    protected MarkLogicItemReader(DatabaseClient databaseClient) {
         this.databaseClient = databaseClient;
-        this.query = queryDefinition;
         documentQueue = new ConcurrentLinkedQueue<DocumentRecord>();
         docMgr = databaseClient.newDocumentManager();
     }
 
-    public MarkLogicItemReader(DatabaseClient databaseClient, StructuredQueryDefinition queryDefinition, ServerTransform serverTransform) {
-        this(databaseClient, queryDefinition);
-        this.serverTransform = serverTransform;
+    public MarkLogicItemReader(DatabaseClient databaseClient, StructuredQueryDefinition structuredQueryDefinition) {
+        this(databaseClient);
+        this.structuredQueryDefinition = structuredQueryDefinition;
+    }
+
+    public MarkLogicItemReader(DatabaseClient databaseClient, StringQueryDefinition stringQueryDefintion) {
+        this(databaseClient);
+        this.stringQueryDefinition = stringQueryDefintion;
     }
 
     @Override
     public void open(ExecutionContext executionContext) throws ItemStreamException {
         dataMovementManger = databaseClient.newDataMovementManager();
-        batcher = dataMovementManger.newQueryBatcher(query)
-                    .withBatchSize(10)
-                    .withThreadCount(1)
-                .onUrisReady(this);
+        if (structuredQueryDefinition != null) {
+            batcher = dataMovementManger.newQueryBatcher(structuredQueryDefinition);
+        } else if (stringQueryDefinition != null) {
+            batcher = dataMovementManger.newQueryBatcher(stringQueryDefinition);
+        }
+        batcher.withBatchSize(100).withThreadCount(2).onUrisReady(this);
         dataMovementManger.startJob(batcher);
         batcher.awaitCompletion();
         dataMovementManger.stopJob(batcher);
@@ -76,4 +85,5 @@ public class MarkLogicItemReader implements QueryBatchListener, ItemStreamReader
             documentQueue.add(page.next());
         }
     }
+
 }
