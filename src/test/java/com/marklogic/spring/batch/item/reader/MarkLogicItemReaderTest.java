@@ -21,27 +21,49 @@ import org.springframework.test.context.TestPropertySource;
 public class MarkLogicItemReaderTest extends AbstractSpringBatchTest {
 
     private MarkLogicItemReader itemReader;
+    private DatabaseClient client;
 
     @Before
     public void before() {
-        DatabaseClient client = getClient();
+        client = getClient();
         QueryManager qm = client.newQueryManager();
         StructuredQueryBuilder sqb = qm.newStructuredQueryBuilder();
         StructuredQueryDefinition query = sqb.directory(true, "/docs/");
 
         itemReader = new MarkLogicItemReader(getClient(), query);
 
-        StringHandle handle = new StringHandle();
-        handle.set("<hello>hello</hello>");
-        XMLDocumentManager docMgr = client.newXMLDocumentManager();
-        docMgr.write("/docs/doc.xml", handle);
+
     }
 
     @Test
     public void readOneDocumentTest() throws Exception {
+        String uri = "/docs/doc.xml";
+        insertDocument(uri);
         itemReader.open(new ExecutionContext());
         DocumentRecord record = itemReader.read();
-        assertEquals(record.getUri(), "/docs/doc.xml");
+        assertEquals(record.getUri(), uri);
         itemReader.close();
+    }
+
+    @Test
+    public void readTwoDocuments() throws Exception {
+        String firstUri = "/docs/a.xml";
+        String secondUri = "/docs/b.xml";
+        insertDocument(firstUri);
+        insertDocument(secondUri);
+
+        itemReader.open(new ExecutionContext());
+        DocumentRecord record = itemReader.read();
+        assertEquals(record.getUri(), firstUri);
+        record = itemReader.read();
+        assertEquals(record.getUri(), secondUri);
+        itemReader.close();
+    }
+
+    private void insertDocument(String uri) {
+        StringHandle handle = new StringHandle();
+        handle.set("<hello>hello</hello>");
+        XMLDocumentManager docMgr = client.newXMLDocumentManager();
+        docMgr.write(uri, handle);
     }
 }
