@@ -1,4 +1,4 @@
-package com.marklogic.batch.delimited;
+package com.marklogic.batch.tika;
 
 import com.marklogic.client.document.DocumentWriteOperation;
 import com.marklogic.client.ext.helper.DatabaseClientProvider;
