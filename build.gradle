@@ -26,12 +26,14 @@ mainClassName = "com.marklogic.spring.batch.core.launch.support.CommandLineJobRu
 
 repositories {
     jcenter()
+    mavenLocal()
     maven { url "http://developer.marklogic.com/maven2/" }
 }
 
 dependencies {
-    compile 'com.marklogic:marklogic-spring-batch-core:1.4.0'
-    testCompile 'com.marklogic:marklogic-spring-batch-test:1.4.0'
+    compile 'com.marklogic:marklogic-spring-batch-core:1.5.0'
+    compile 'com.marklogic:spring-batch-file:1.5.0'
+    testCompile 'com.marklogic:marklogic-spring-batch-test:1.5.0'
     testCompile "com.marklogic:ml-junit:3.1.0"
 }
 
@@ -86,4 +88,16 @@ task importBabyNames(type: JavaExec) {
             "--thread_count", "2",
             "--output_transform", "com.marklogic.hector.examples.babies.BabyNameColumnMapSerializer"]
             //"uri_transform=com.marklogic.hector.examples.babies.BabyNameUriGenerator"]
+}
+
+task importDocument(type: JavaExec) {
+    main = 'com.marklogic.spring.batch.core.launch.support.CommandLineJobRunner'
+    classpath = sourceSets.test.runtimeClasspath
+    args = ["--job_path", "com.marklogic.batch.JobConfig",
+            "--job_id", "importFilesAndParseJob",
+            "--input_file_path", "./src/test/resources/doc/LoremIpsum.docx",
+            "--output_collections", "baby-name",
+            "--chunk_size", "500",
+            "--thread_count", "2",
+            "--next"]
 }
