@@ -1,6 +1,5 @@
-package com.marklogic.hector.examples;
+package com.marklogic.batch.delimited;
 
-import com.marklogic.batch.delimited.ImportDelimitedFileJobConfig;
 import com.marklogic.junit.Fragment;
 import com.marklogic.spring.batch.test.AbstractJobRunnerTest;
 import org.junit.Before;
@@ -16,7 +15,7 @@ public class ImportNycBabiesTest extends AbstractJobRunnerTest {
 
     @Before
     public void initJobParameters() {
-        jpb.addString("input_file_path", ".\\src\\test\\resources\\baby-names.csv");
+        jpb.addString("input_file_path", ".\\src\\test\\resources\\delimited\\baby-names.csv");
         jpb.addString("delimited_root_name", "baby-name");
         jpb.addString("output_collections", "baby-name");
 
@@ -24,8 +23,8 @@ public class ImportNycBabiesTest extends AbstractJobRunnerTest {
 
     @Test
     public void ingestDelimitedBabyNamesWithOutputTransformTest() throws Exception {
-        jpb.addString("uri_transform", "com.marklogic.hector.examples.babies.BabyNameUriGenerator");
-        jpb.addString("output_transform", "com.marklogic.hector.examples.babies.BabyNameColumnMapSerializer");
+        jpb.addString("uri_transform", "com.marklogic.batch.delimited.support.BabyNameUriGenerator");
+        jpb.addString("output_transform", "com.marklogic.batch.delimited.support.BabyNameColumnMapSerializer");
         JobExecution jobExecution = getJobLauncherTestUtils().launchJob(jpb.toJobParameters());
         getClientTestHelper().assertCollectionSize("Expecting 199 files in baby-name collection", "baby-name", 199);
         Fragment f = getClientTestHelper().parseUri("2011-HAZEL.xml", "baby-name");
@@ -41,7 +40,7 @@ public class ImportNycBabiesTest extends AbstractJobRunnerTest {
 
     @Test
     public void ingestDelimitedBabyNamesWithUriTransformTest() throws Exception {
-        jpb.addString("uri_transform", "com.marklogic.hector.examples.babies.BabyNameUriGenerator");
+        jpb.addString("uri_transform", "com.marklogic.batch.delimited.support.BabyNameUriGenerator");
         JobExecution jobExecution = getJobLauncherTestUtils().launchJob(jpb.toJobParameters());
         getClientTestHelper().assertCollectionSize("Expecting 199 files in baby-name collection", "baby-name", 199);
         getClientTestHelper().parseUri("2011-HAZEL.xml", "baby-name");
@@ -58,9 +57,9 @@ public class ImportNycBabiesTest extends AbstractJobRunnerTest {
     @Test
     public void ingestBabyNamesWithDefaultDelimitedRootNameTest() throws Exception {
         JobParametersBuilder jpb = new JobParametersBuilder();
-        jpb.addString("input_file_path", ".\\src\\test\\resources\\baby-names.csv");
+        jpb.addString("input_file_path", ".\\src\\test\\resources\\delimited\\baby-names.csv");
         jpb.addString("output_collections", "baby-name");
-        jpb.addString("uri_transform", "com.marklogic.hector.examples.babies.BabyNameUriGenerator");
+        jpb.addString("uri_transform", "com.marklogic.batch.delimited.support.BabyNameUriGenerator");
         JobExecution jobExecution = getJobLauncherTestUtils().launchJob(jpb.toJobParameters());
         getClientTestHelper().assertCollectionSize("Expecting 199 files in baby-name collection", "baby-name", 199);
         Fragment f = getClientTestHelper().parseUri("2011-HAZEL.xml", "baby-name");

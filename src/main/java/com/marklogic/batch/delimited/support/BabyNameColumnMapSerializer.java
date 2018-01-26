@@ -1,4 +1,4 @@
-package com.marklogic.hector.examples.babies;
+package com.marklogic.batch.delimited.support;
 
 import com.marklogic.spring.batch.columnmap.XmlStringColumnMapSerializer;
 

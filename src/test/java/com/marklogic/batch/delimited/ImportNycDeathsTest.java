@@ -1,4 +1,4 @@
-package com.marklogic.hector.examples;
+package com.marklogic.batch.delimited;
 
 import com.marklogic.batch.delimited.ImportDelimitedFileJobConfig;
 import com.marklogic.spring.batch.test.AbstractJobRunnerTest;
@@ -12,16 +12,21 @@ import org.springframework.test.context.ContextConfiguration;
 public class ImportNycDeathsTest extends AbstractJobRunnerTest {
 
     private JobParametersBuilder jpb = new JobParametersBuilder();
+    private JobExecution jobExecution;
 
-    @Before
-    public void initJobParameters() {
-        jpb.addString("input_file_path", ".\\src\\test\\resources\\nyc-deaths.csv");
+    @Test
+    public void ingestDelimitedNycDeathsTest() throws Exception {
+        givenJobParameters();
+        whenJobIsLaunched();
+        getClientTestHelper().assertCollectionSize("Expecting 7 files in nyc collection", "nyc", 7);
+    }
+
+    private void givenJobParameters() {
+        jpb.addString("input_file_path", ".\\src\\test\\resources\\delimited\\nyc-deaths.csv");
         jpb.addString("output_collections", "nyc");
     }
 
-    @Test
-    public void ingestDelimitedBabyNamesDefaultThreadAndChunkSizeTest() throws Exception {
-        JobExecution jobExecution = getJobLauncherTestUtils().launchJob(jpb.toJobParameters());
-        getClientTestHelper().assertCollectionSize("Expecting 7 files in nyc collection", "nyc", 7);
+    private void whenJobIsLaunched() throws Exception {
+        jobExecution = getJobLauncherTestUtils().launchJob(jpb.toJobParameters());
     }
 }
