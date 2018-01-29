@@ -11,10 +11,10 @@ jobs:
       - image: circleci/openjdk:8-jdk
 
       - image: $DOCKER_MARKLOGIC_IMAGE
-        - auth:
-            username: $DOCKER_USER
-            password: $DOCKER_PASSWORD
-            
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASSWORD
+
     working_directory: ~/repo
 
     environment:
