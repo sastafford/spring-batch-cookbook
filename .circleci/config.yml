@@ -33,6 +33,7 @@ jobs:
           - v1-dependencies-
 
       - run: |
+          docker version
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           docker info
           docker pull $DOCKER_MARKLOGIC_IMAGE
