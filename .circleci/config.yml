@@ -10,11 +10,11 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
+      - image: $DOCKER_MARKLOGIC_IMAGE
+        - auth:
+            username: $DOCKER_USER
+            password: $DOCKER_PASSWORD
+            
     working_directory: ~/repo
 
     environment:
@@ -28,17 +28,11 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "build.gradle" }}
+          - v1-dependencies-{{ checksum "delimited/build.gradle" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: |
-          docker version
-          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-          docker info
-          docker pull $DOCKER_MARKLOGIC_IMAGE
-
-      # - run: gradle dependencies
+      - run: gradle dependencies
 
       - save_cache:
           paths:
