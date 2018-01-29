@@ -19,13 +19,13 @@ task importBabyNames(type: JavaExec) {
     classpath = sourceSets.test.runtimeClasspath
     args = ["--job_path", "com.marklogic.batch.delimited.ImportDelimitedFileJobConfig",
             "--job_id", "importDelimitedFile",
-            "--input_file_path", "./src/test/resources/Most_Popular_Baby_Names_NYC.csv",
+            "--input_file_path", "./src/test/resources/delimited/ksMost_Popular_Baby_Names_NYC.csv",
             "--next",
             "--delimited_root_name", "baby-name",
             "--document_type", "xml",
             "--output_collections", "baby-name",
             "--chunk_size", "500",
             "--thread_count", "2",
-            "--output_transform", "com.marklogic.hector.examples.babies.BabyNameColumnMapSerializer"]
+            "--output_transform", "com.marklogic.batch.delimited.support.BabyNameColumnMapSerializer"]
     //"uri_transform=com.marklogic.hector.examples.babies.BabyNameUriGenerator"]
 }

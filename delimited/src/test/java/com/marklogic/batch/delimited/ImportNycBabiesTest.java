@@ -15,7 +15,7 @@ public class ImportNycBabiesTest extends AbstractJobRunnerTest {
 
     @Before
     public void initJobParameters() {
-        jpb.addString("input_file_path", ".\\src\\test\\resources\\delimited\\baby-names.csv");
+        jpb.addString("input_file_path", "./src/test/resources/delimited/baby-names.csv");
         jpb.addString("delimited_root_name", "baby-name");
         jpb.addString("output_collections", "baby-name");
 
@@ -57,7 +57,7 @@ public class ImportNycBabiesTest extends AbstractJobRunnerTest {
     @Test
     public void ingestBabyNamesWithDefaultDelimitedRootNameTest() throws Exception {
         JobParametersBuilder jpb = new JobParametersBuilder();
-        jpb.addString("input_file_path", ".\\src\\test\\resources\\delimited\\baby-names.csv");
+        jpb.addString("input_file_path", "./src/test/resources/delimited/baby-names.csv");
         jpb.addString("output_collections", "baby-name");
         jpb.addString("uri_transform", "com.marklogic.batch.delimited.support.BabyNameUriGenerator");
         JobExecution jobExecution = getJobLauncherTestUtils().launchJob(jpb.toJobParameters());
