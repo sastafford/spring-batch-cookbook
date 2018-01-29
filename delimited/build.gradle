@@ -19,7 +19,7 @@ task importBabyNames(type: JavaExec) {
     classpath = sourceSets.test.runtimeClasspath
     args = ["--job_path", "com.marklogic.batch.delimited.ImportDelimitedFileJobConfig",
             "--job_id", "importDelimitedFile",
-            "--input_file_path", "./src/test/resources/delimited/ksMost_Popular_Baby_Names_NYC.csv",
+            "--input_file_path", "./src/test/resources/delimited/Most_Popular_Baby_Names_NYC.csv",
             "--next",
             "--delimited_root_name", "baby-name",
             "--document_type", "xml",
