@@ -49,11 +49,11 @@ jobs:
       - run: gradle test --info
 
       - run:
-        name: Save test results
-        command: |
-          mkdir -p ~/junit/delimited/
-          find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/delimited/ \;
-        when: always
+          name: Save test results
+          command: |
+            mkdir -p ~/junit/delimited/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/delimited/ \;
+          when: always
 
       - store_test_results:
           path: ~/junit/delimited/
