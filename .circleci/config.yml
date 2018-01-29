@@ -37,7 +37,7 @@ jobs:
           docker info
           docker pull $DOCKER_MARKLOGIC_IMAGE
 
-      - run: gradle dependencies
+      # - run: gradle dependencies
 
       - save_cache:
           paths:
