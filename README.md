@@ -1,29 +1,28 @@
-# Hector - Ingest Delimited Files into MarkLogic
+![GitHub version](https://badge.fury.io/gh/sastafford%2Fspring-batch-cookbook.svg)
 
-Hector is a command line program that ingests delimited text files into MarkLogic.  Hector is easily extensible allowing developers to transform delimited records before ingesting data into MarkLogic while still providing high performance.  
+| Branch | Status |
+| ------------- | ------------- |
+| master | ![master](https://circleci.com/gh/sastafford/spring-batch-cookbook/tree/master.png)  |
+| dev  | ![dev](https://circleci.com/gh/sastafford/spring-batch-cookbook/tree/dev.png)  |
 
-Hector is built using the [Spring Batch](http://docs.spring.io/spring-batch/trunk/reference/html/) framework and the [MarkLogic Spring Batch](https://github.com/sastafford/marklogic-spring-batch) extensions.  
+# What is the Spring Batch Cookbook
 
-## Prerequisites
+The Spring Batch Cookbook are example programs that demonstrate the use of [Spring Batch](https://projects.spring.io/spring-batch/) and [MarkLogic](www.marklogic.com). 
+
+# Prerequisites
 
  * JDK 1.8
  * MarkLogic 8+
- * Gradle - know how it is used
+   * Default is the app server on port 8000 and the Documents database
+   * See job.properties under _subproject_/src/test/resources
  
-## How do I install Hector?
+# Running the Tests
 
 1) Clone or download this project.  
 
-2) Create a MarkLogic app server and database for testing purposes.  Review gradle.properties before deploying
+2) Run the tests  
 
-     gradlew mlDeploy
+       gradlew test
 
-3) Run the gradle tests.  Check the job.properties under src/test/resources to make sure it is configured correctly. All tests should pass.
-
-     gradlew test
-
-4) Create a distribution
-
-    gradlew distZip
 
 
