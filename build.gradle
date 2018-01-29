@@ -1,0 +1,17 @@
+// ml-gradle added to initialize MarkLogic docker container for CI
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+            jcenter()
+        }
+    }
+    dependencies {
+        classpath "com.marklogic:ml-gradle:3.4.0"
+    }
+}
+
+plugins {
+    id "com.marklogic.ml-gradle" version "3.4.0"
+}

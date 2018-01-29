@@ -34,6 +34,12 @@ jobs:
 
       - run: gradle dependencies
 
+      - run:
+          name: Initialize MarkLogic
+          command: |
+            gradle mlInit -PmlHost=localhost --info
+            gradle mlInstallAdmin -PmlHost=localhost -PmlAdminPassword=admin -PmlAdminUsername=admin --info
+
       - save_cache:
           paths:
             - ~/.gradle
