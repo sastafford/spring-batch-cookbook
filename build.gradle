@@ -1,103 +1,17 @@
+// ml-gradle added to initialize MarkLogic docker container for CI
+
 buildscript {
     repositories {
         maven {
             url "https://plugins.gradle.org/m2/"
+            jcenter()
         }
     }
     dependencies {
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3"
+        classpath "com.marklogic:ml-gradle:3.4.0"
     }
 }
-
 
 plugins {
-    id "com.marklogic.ml-gradle" version "3.2.0"
-    id "java"
-    id "maven-publish"
-    id "application"
-}
-
-apply plugin: "com.jfrog.bintray"
-
-group 'com.marklogic'
-version '1.4.0'
-
-mainClassName = "com.marklogic.spring.batch.core.launch.support.CommandLineJobRunner"
-
-repositories {
-    jcenter()
-    mavenLocal()
-    maven { url "http://developer.marklogic.com/maven2/" }
-}
-
-dependencies {
-    compile 'com.marklogic:marklogic-spring-batch-core:1.6.0'
-    compile 'com.marklogic:spring-batch-file:1.6.0'
-    testCompile 'com.marklogic:marklogic-spring-batch-test:1.6.0'
-    testCompile "com.marklogic:ml-junit:3.1.0"
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    baseName = project.name
-    version = version
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-publishing {
-    publications {
-        mainJavaWithSources(MavenPublication) {
-            groupId group
-            artifactId project.name
-            version version
-            from components.java
-            artifact sourcesJar
-        }
-    }
-}
-
-bintray {
-    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_KEY')
-    publications = ["mainJavaWithSources"]
-    pkg {
-        repo = "maven"
-        name = project.name
-        userOrg = "sastafford"
-        licenses = ["Apache-2.0"]
-        vcsUrl = "https://github.com/sastafford/hector.git"
-        version {
-            name = project.version
-            released = new Date()
-            vcsTag = project.version
-        }
-    }
-}
-
-task importBabyNames(type: JavaExec) {
-    main = 'com.marklogic.spring.batch.core.launch.support.CommandLineJobRunner'
-    classpath = sourceSets.test.runtimeClasspath
-    args = ["--job_path", "com.marklogic.batch.JobConfig",
-            "--job_id", "importDelimitedFile",
-            "--input_file_path", "./src/test/resources/Most_Popular_Baby_Names_NYC.csv",
-            "--next",
-            "--delimited_root_name", "baby-name",
-            "--document_type", "xml",
-            "--output_collections", "baby-name",
-            "--chunk_size", "500",
-            "--thread_count", "2",
-            "--output_transform", "com.marklogic.hector.examples.babies.BabyNameColumnMapSerializer"]
-            //"uri_transform=com.marklogic.hector.examples.babies.BabyNameUriGenerator"]
-}
-
-task importDocument(type: JavaExec) {
-    main = 'com.marklogic.spring.batch.core.launch.support.CommandLineJobRunner'
-    classpath = sourceSets.test.runtimeClasspath
-    args = ["--job_path", "com.marklogic.batch.JobConfig",
-            "--job_id", "importFilesAndParseJob",
-            "--input_file_path", "./src/test/resources/doc/LoremIpsum.docx",
-            "--output_collections", "baby-name",
-            "--chunk_size", "500",
-            "--thread_count", "2",
-            "--next"]
+    id "com.marklogic.ml-gradle" version "3.4.0"
 }

@@ -22,7 +22,7 @@ public class ImportNycDeathsTest extends AbstractJobRunnerTest {
     }
 
     private void givenJobParameters() {
-        jpb.addString("input_file_path", ".\\src\\test\\resources\\delimited\\nyc-deaths.csv");
+        jpb.addString("input_file_path", "./src/test/resources/delimited/nyc-deaths.csv");
         jpb.addString("output_collections", "nyc");
     }
 
