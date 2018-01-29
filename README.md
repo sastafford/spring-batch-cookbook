@@ -25,4 +25,7 @@ The Spring Batch Cookbook are example programs that demonstrate the use of [Spri
        gradlew test
 
 
+# Recipes
 
+1) delimited - import delimited files into MarkLogic
+1) tika - Use Apache Tika to extract unstructured content from binaries and ingest extracted text into MarkLogic
