@@ -5,6 +5,7 @@ plugins {
 repositories {
     jcenter()
     maven { url "http://developer.marklogic.com/maven2/" }
+    mavenLocal()
 }
 
 dependencies {
@@ -16,7 +17,7 @@ dependencies {
 
 task importBabyNames(type: JavaExec) {
     main = 'com.marklogic.spring.batch.core.launch.support.CommandLineJobRunner'
-    classpath = sourceSets.test.runtimeClasspath
+    classpath = sourceSets.main.runtimeClasspath + files("../")
     args = ["--job_path", "com.marklogic.batch.delimited.ImportDelimitedFileJobConfig",
             "--job_id", "importDelimitedFile",
             "--input_file_path", "./src/test/resources/delimited/Most_Popular_Baby_Names_NYC.csv",
@@ -26,6 +27,10 @@ task importBabyNames(type: JavaExec) {
             "--output_collections", "baby-name",
             "--chunk_size", "500",
             "--thread_count", "2",
-            "--output_transform", "com.marklogic.batch.delimited.support.BabyNameColumnMapSerializer"]
-    //"uri_transform=com.marklogic.hector.examples.babies.BabyNameUriGenerator"]
+            "--output_transform", "com.marklogic.batch.delimited.support.BabyNameColumnMapSerializer",
+            "--uri_transform", "com.marklogic.batch.delimited.support.BabyNameUriGenerator"]
+}
+
+task deleteBabyNames (type: com.marklogic.gradle.task.datamovement.DeleteCollectionsTask) {
+    collections = ["baby-name"]
 }
