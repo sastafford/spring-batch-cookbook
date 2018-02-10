@@ -1,5 +1,6 @@
 package com.marklogic.batch.rdbms;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,6 +13,7 @@ import javax.sql.DataSource;
 @Configuration
 public class H2DatabaseConfiguration {
 
+    @Qualifier("customerDatabase")
     @Bean
     public DataSource dataSource() {
         // no need shutdown, EmbeddedDatabaseFactoryBean will take care of this
@@ -24,7 +26,8 @@ public class H2DatabaseConfiguration {
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+    public JdbcTemplate jdbcTemplate(
+            @Qualifier("customerDatabase")DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
 }

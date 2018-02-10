@@ -1,13 +1,6 @@
-![GitHub version](https://badge.fury.io/gh/sastafford%2Fspring-batch-cookbook.svg)
+# Learn how to use Spring Batch 
 
-| Branch | Status |
-| ------------- | ------------- |
-| master | ![master](https://circleci.com/gh/sastafford/spring-batch-cookbook/tree/master.png)  |
-| dev  | ![dev](https://circleci.com/gh/sastafford/spring-batch-cookbook/tree/dev.png)  |
-
-# What is the Spring Batch Cookbook
-
-The Spring Batch Cookbook are example programs that demonstrate the use of [Spring Batch](https://projects.spring.io/spring-batch/) and [MarkLogic](www.marklogic.com). 
+The Spring Batch Cookbook project is a collection of batch processing programs intended to demonstrate how Spring Batch could be used specifically with [MarkLogic](www.marklogic.com).  Use these programs as-is or modify to accomplish your requirements.  
 
 # Prerequisites
 

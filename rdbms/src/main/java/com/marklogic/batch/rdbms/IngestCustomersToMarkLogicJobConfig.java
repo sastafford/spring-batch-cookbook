@@ -12,33 +12,32 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.JobScope;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.*;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@EnableBatchProcessing
+@EnableBatchProcessing(modular = true)
 @Import(value = {
-    com.marklogic.spring.batch.config.MarkLogicBatchConfiguration.class,
-    com.marklogic.spring.batch.config.MarkLogicConfiguration.class})
+    com.marklogic.spring.batch.config.MarkLogicConfiguration.class,
+    IngestCustomersToMarkLogicJobConfig.BasicBatchConfigurer.class})
 @PropertySource("classpath:job.properties")
-public class IngestRelationalToMarkLogicJobConfig {
+public class IngestCustomersToMarkLogicJobConfig {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
-    private final String JOB_NAME = "ingestRelationalToMarkLogic";
+    private final String JOB_NAME = "ingestCustomersToMarkLogicJob";
+
 
     @Bean(name = JOB_NAME)
     public Job job(JobBuilderFactory jobBuilderFactory, Step step) {
@@ -65,7 +64,7 @@ public class IngestRelationalToMarkLogicJobConfig {
     @JobScope
     public Step step(
         StepBuilderFactory stepBuilderFactory,
-        DataSource dataSource,
+        @Qualifier("customerDatabase") DataSource dataSource,
         DatabaseClientProvider databaseClientProvider) {
 
         AllTablesItemReader reader = new AllTablesItemReader(dataSource);
@@ -90,13 +89,12 @@ public class IngestRelationalToMarkLogicJobConfig {
     }
 
     @Bean
+    @Qualifier("customerDatabase")
     public DataSource dataSource(
         @Value("${jdbc.driver:null}") String jdbcDriverClassName,
         @Value("${jdbc.url:null}") String jdbcUrl,
         @Value("${jdbc.username:sa}") String username,
-        @Value("${jdbc.password:sa}") String password
-
-    ) {
+        @Value("${jdbc.password:sa}") String password) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(jdbcDriverClassName);
         dataSource.setUrl(jdbcUrl);
@@ -105,5 +103,12 @@ public class IngestRelationalToMarkLogicJobConfig {
         return dataSource;
     }
 
+    @Component
+    public class BasicBatchConfigurer extends DefaultBatchConfigurer {
 
+        @Override
+        public void setDataSource(DataSource dataSource) {
+
+        }
+    }
 }
