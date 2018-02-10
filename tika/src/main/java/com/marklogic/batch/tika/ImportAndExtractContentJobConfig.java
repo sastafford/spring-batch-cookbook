@@ -26,16 +26,16 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.Resource;
 
 @EnableBatchProcessing
-@Import( {MarkLogicBatchConfiguration.class, MarkLogicConfiguration.class} )
+@Import( {MarkLogicConfiguration.class} )
 @PropertySource("classpath:job.properties")
-public class ImportFilesAndParseJobConfig {
+public class ImportAndExtractContentJobConfig {
 
     private final static Logger logger = LoggerFactory.getLogger(MarkLogicItemWriter.class);
 
     @Autowired
     DatabaseClientProvider databaseClientProvider;
 
-    @Bean(name = "importFilesAndParseJob")
+    @Bean(name = "importAndExtractContentJob")
     @Primary
     public Job loadDocumentsFromDirectoryJob(
             JobBuilderFactory jobBuilderFactory,

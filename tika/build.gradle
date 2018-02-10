@@ -8,19 +8,19 @@ repositories {
 }
 
 dependencies {
-    compile 'com.marklogic:marklogic-spring-batch-core:1.6.0'
-    compile 'com.marklogic:spring-batch-file:1.6.0'
-    testCompile 'com.marklogic:marklogic-spring-batch-test:1.6.0'
+    compile 'com.marklogic:marklogic-spring-batch-core:1.+'
+    compile 'com.marklogic:spring-batch-file:1.+'
+    testCompile 'com.marklogic:marklogic-spring-batch-test:1.+'
     testCompile "com.marklogic:ml-junit:3.1.0"
 }
 
-task importDocument(type: JavaExec) {
+task importAndExtract(type: JavaExec) {
     main = 'com.marklogic.spring.batch.core.launch.support.CommandLineJobRunner'
-    classpath = sourceSets.test.runtimeClasspath
-    args = ["--job_path", "com.marklogic.batch.JobConfig",
-            "--job_id", "importFilesAndParseJob",
+    classpath = sourceSets.main.runtimeClasspath + files("../")
+    args = ["--job_path", "com.marklogic.batch.tika.ImportAndExtractContentJobConfig",
+            "--job_id", "importAndExtractContentJob",
             "--input_file_path", "./src/test/resources/doc/LoremIpsum.docx",
-            "--output_collections", "baby-name",
+            "--output_collections", "tika",
             "--chunk_size", "500",
             "--thread_count", "2",
             "--next"]
