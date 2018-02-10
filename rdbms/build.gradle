@@ -23,7 +23,7 @@ task ingestCustomers(type: JavaExec) {
     classpath = sourceSets.test.runtimeClasspath
     main = "com.marklogic.spring.batch.core.launch.support.CommandLineJobRunner"
     args = [
-            "--job_path", "com.marklogic.batch.rdbms.IngestCustomersJobConfig",
+            "--job_path", "com.marklogic.batch.rdbms.IngestCustomersToMarkLogicJobConfig",
             "--job_id", "ingestCustomersToMarkLogicJob"
     ]
 }

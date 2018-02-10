@@ -19,7 +19,6 @@ public class IngestCustomersJobTest extends AbstractJobRunnerTest {
     @Autowired
     Job ingestCustomersToMarkLogicJob;
 
-
     @Test
     public void ingestCustomersIntoMarkLogic() {
         givenIngestCustomersJob();
