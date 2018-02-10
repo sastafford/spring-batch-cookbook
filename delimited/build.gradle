@@ -27,6 +27,6 @@ task importBabyNames(type: JavaExec) {
             "--output_collections", "baby-name",
             "--chunk_size", "500",
             "--thread_count", "2",
-            "--output_transform", "com.marklogic.batch.delimited.support.BabyNameColumnMapSerializer"]
-    //"uri_transform=com.marklogic.hector.examples.babies.BabyNameUriGenerator"]
+            "--output_transform", "com.marklogic.batch.delimited.support.BabyNameColumnMapSerializer",
+            "--uri_transform", "com.marklogic.batch.delimited.support.BabyNameUriGenerator"]
 }
