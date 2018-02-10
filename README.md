@@ -1,13 +1,6 @@
-![GitHub version](https://badge.fury.io/gh/sastafford%2Fspring-batch-cookbook.svg)
+# Learn how to use Spring Batch 
 
-| Branch | Status |
-| ------------- | ------------- |
-| master | ![master](https://circleci.com/gh/sastafford/spring-batch-cookbook/tree/master.png)  |
-| dev  | ![dev](https://circleci.com/gh/sastafford/spring-batch-cookbook/tree/dev.png)  |
-
-# What is the Spring Batch Cookbook
-
-The Spring Batch Cookbook are example programs that demonstrate the use of [Spring Batch](https://projects.spring.io/spring-batch/) and [MarkLogic](www.marklogic.com). 
+The Spring Batch Cookbook project is a collection of batch processing programs intended to demonstrate how Spring Batch could be used specifically with [MarkLogic](www.marklogic.com).  Use these programs as-is or modify to accomplish your requirements.  
 
 # Prerequisites
 
@@ -16,16 +9,8 @@ The Spring Batch Cookbook are example programs that demonstrate the use of [Spri
    * Default is the app server on port 8000 and the Documents database
    * See job.properties under _subproject_/src/test/resources
  
-# Running the Tests
-
-1) Clone or download this project.  
-
-2) Run the tests  
-
-       gradlew test
-
-
 # Recipes
 
 1) delimited - import delimited files into MarkLogic
 1) tika - Use Apache Tika to extract unstructured content from binaries and ingest extracted text into MarkLogic
+1) rdbms - import customer data from an H2 relational database

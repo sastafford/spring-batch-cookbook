@@ -5,6 +5,7 @@ plugins {
 repositories {
     jcenter()
     maven { url "http://developer.marklogic.com/maven2/" }
+    mavenLocal()
 }
 
 dependencies {

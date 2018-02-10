@@ -41,14 +41,11 @@ import java.util.Map;
 import static java.lang.ClassLoader.getSystemClassLoader;
 
 @EnableBatchProcessing
-@Import( {MarkLogicBatchConfiguration.class, MarkLogicConfiguration.class} )
+@Import( {MarkLogicConfiguration.class} )
 @PropertySource("classpath:job.properties")
 public class ImportDelimitedFileJobConfig {
 
     private final static Logger logger = LoggerFactory.getLogger(MarkLogicItemWriter.class);
-
-    @Autowired
-    DatabaseClientProvider databaseClientProvider;
 
     @Bean(name = "importDelimitedFile")
     @Primary
