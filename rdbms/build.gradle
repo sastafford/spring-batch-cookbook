@@ -7,7 +7,7 @@ repositories {
     maven {url 'http://developer.marklogic.com/maven2/'}
     mavenLocal()
 }
-Gradle
+
 dependencies {
     compile "com.marklogic:marklogic-spring-batch-core:1.+"
     compile 'com.marklogic:spring-batch-rdbms:1.+'
@@ -20,7 +20,7 @@ dependencies {
 }
 
 task ingestCustomers(type: JavaExec) {
-    classpath = sourceSets.test.runtimeClasspath
+    classpath = sourceSets.main.runtimeClasspath + files("../")
     main = "com.marklogic.spring.batch.core.launch.support.CommandLineJobRunner"
     args = [
             "--job_path", "com.marklogic.batch.rdbms.IngestCustomersToMarkLogicJobConfig",
