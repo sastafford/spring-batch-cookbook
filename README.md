@@ -5,7 +5,7 @@ The Spring Batch Cookbook project is a collection of batch processing programs i
 # Prerequisites
 
  * JDK 1.8
- * MarkLogic 8+
+ * MarkLogic 9+
  
 # Quick Start
 
