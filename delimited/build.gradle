@@ -17,7 +17,7 @@ dependencies {
 
 task importBabyNames(type: JavaExec) {
     main = 'com.marklogic.spring.batch.core.launch.support.CommandLineJobRunner'
-    classpath = sourceSets.test.runtimeClasspath
+    classpath = sourceSets.main.runtimeClasspath + files("../")
     args = ["--job_path", "com.marklogic.batch.delimited.ImportDelimitedFileJobConfig",
             "--job_id", "importDelimitedFile",
             "--input_file_path", "./src/test/resources/delimited/Most_Popular_Baby_Names_NYC.csv",
