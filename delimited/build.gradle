@@ -30,3 +30,7 @@ task importBabyNames(type: JavaExec) {
             "--output_transform", "com.marklogic.batch.delimited.support.BabyNameColumnMapSerializer",
             "--uri_transform", "com.marklogic.batch.delimited.support.BabyNameUriGenerator"]
 }
+
+task deleteBabyNames (type: com.marklogic.gradle.task.datamovement.DeleteCollectionsTask) {
+    collections = ["baby-name"]
+}
