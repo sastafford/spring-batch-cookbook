@@ -9,16 +9,8 @@ The Spring Batch Cookbook project is a collection of batch processing programs i
    * Default is the app server on port 8000 and the Documents database
    * See job.properties under _subproject_/src/test/resources
  
-# Running the Tests
-
-1) Clone or download this project.  
-
-2) Run the tests  
-
-       gradlew test
-
-
 # Recipes
 
 1) delimited - import delimited files into MarkLogic
 1) tika - Use Apache Tika to extract unstructured content from binaries and ingest extracted text into MarkLogic
+1) rdbms - import customer data from an H2 relational database
