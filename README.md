@@ -4,12 +4,16 @@ The Spring Batch Cookbook project is a collection of batch processing programs i
 
 # Prerequisites
 
- * JDK 1.8
- * MarkLogic 9+
+ * [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+ * [MarkLogic 9+](https://developer.marklogic.com/products)
  
 # Quick Start
 
-Before running a program, review the job.properties file in the project root directory to make sure that the properties are correct for your environment.   
+To begin, clone this git repository.
+
+     https://github.com/sastafford/spring-batch-cookbook.git
+
+Before running a program, review the job.properties file in the project root directory to make sure that the properties are correct for your environment.  By default the appserver on port 8000 points to the "Documents" database.  
 
     marklogic.host=localhost
     marklogic.port=8000
