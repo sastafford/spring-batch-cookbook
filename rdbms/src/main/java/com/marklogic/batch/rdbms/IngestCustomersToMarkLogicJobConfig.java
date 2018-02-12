@@ -78,7 +78,7 @@ public class IngestCustomersToMarkLogicJobConfig {
         UriGenerator<Map<String, Object>> uriGenerator = new UriGenerator<Map<String, Object>>() {
             @Override
             public String generateUri(Map<String, Object> s) throws Exception {
-                return UUID.randomUUID().toString() + ".xml";
+                return "/customer/" + UUID.randomUUID().toString() + ".xml";
             }
         };
         ColumnMapItemProcessor processor = new ColumnMapItemProcessor(uriGenerator, serializer);
