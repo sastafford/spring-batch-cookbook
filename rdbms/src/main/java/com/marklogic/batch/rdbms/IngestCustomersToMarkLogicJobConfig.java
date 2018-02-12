@@ -4,7 +4,7 @@ import com.marklogic.client.document.DocumentWriteOperation;
 import com.marklogic.client.ext.helper.DatabaseClientProvider;
 import com.marklogic.spring.batch.columnmap.ColumnMapSerializer;
 import com.marklogic.spring.batch.columnmap.XmlStringColumnMapSerializer;
-import com.marklogic.spring.batch.item.rdbms.AllTablesItemReader;
+import com.marklogic.spring.batch.item.processor.support.UriGenerator;
 import com.marklogic.spring.batch.item.writer.MarkLogicItemWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +15,19 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.*;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.UUID;
 
 @EnableBatchProcessing(modular = true)
 @Import(value = {
@@ -67,16 +68,21 @@ public class IngestCustomersToMarkLogicJobConfig {
         @Qualifier("customerDatabase") DataSource dataSource,
         DatabaseClientProvider databaseClientProvider) {
 
-        AllTablesItemReader reader = new AllTablesItemReader(dataSource);
-        Set<String> excludeTableNameSet = new HashSet<String>();
-        excludeTableNameSet.add("INVOICE");
-        excludeTableNameSet.add("ITEM");
-        excludeTableNameSet.add("PRODUCT");
-        reader.setExcludeTableNames(excludeTableNameSet);
+        JdbcCursorItemReader<Map<String, Object>> reader = new JdbcCursorItemReader<Map<String, Object>>();
+        reader.setDataSource(dataSource);
+        reader.setSql("SELECT * FROM CUSTOMER");
+        reader.setRowMapper(new ColumnMapRowMapper());
 
         // Processor - this is a very basic implementation for converting a column map to an XML string
         ColumnMapSerializer serializer = new XmlStringColumnMapSerializer();
-        RowItemProcessor processor = new RowItemProcessor(serializer);
+        UriGenerator<Map<String, Object>> uriGenerator = new UriGenerator<Map<String, Object>>() {
+            @Override
+            public String generateUri(Map<String, Object> s) throws Exception {
+                return "/customer/" + UUID.randomUUID().toString() + ".xml";
+            }
+        };
+        ColumnMapItemProcessor processor = new ColumnMapItemProcessor(uriGenerator, serializer);
+        processor.setCollections(new String[]{"CUSTOMER"});
 
         ItemWriter writer = new MarkLogicItemWriter(databaseClientProvider.getDatabaseClient());
 
