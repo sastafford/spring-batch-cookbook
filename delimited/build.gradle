@@ -10,7 +10,6 @@ repositories {
 
 dependencies {
     compile 'com.marklogic:marklogic-spring-batch-core:1.+'
-    compile 'com.marklogic:spring-batch-file:1.+'
     testCompile 'com.marklogic:marklogic-spring-batch-test:1.+'
     testCompile "com.marklogic:ml-junit:3.1.0"
 }
