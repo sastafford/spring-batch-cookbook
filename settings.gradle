@@ -3,3 +3,4 @@ rootProject.name = 'cookbook'
 include "tika"
 include "delimited"
 include "rdbms"
+include "fixed-width"

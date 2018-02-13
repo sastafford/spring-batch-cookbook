@@ -8,18 +8,25 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 @ContextConfiguration(classes = {ImportDelimitedFileJobConfig.class})
 public class ImportNycBabiesTest extends AbstractJobRunnerTest {
 
     private JobParametersBuilder jpb = new JobParametersBuilder();
+    private JobExecution jobExecution;
 
     @Before
-    public void initJobParameters() {
+    public void givenDelimitedFileJob() {
         jpb.addString("input_file_path", "./src/test/resources/delimited/baby-names.csv");
         jpb.addString("delimited_root_name", "baby-name");
         jpb.addString("output_collections", "baby-name");
 
     }
+
 
     @Test
     public void ingestDelimitedBabyNamesWithOutputTransformTest() throws Exception {
@@ -27,7 +34,8 @@ public class ImportNycBabiesTest extends AbstractJobRunnerTest {
         jpb.addString("output_transform", "com.marklogic.batch.delimited.support.BabyNameColumnMapSerializer");
         JobExecution jobExecution = getJobLauncherTestUtils().launchJob(jpb.toJobParameters());
         getClientTestHelper().assertCollectionSize("Expecting 199 files in baby-name collection", "baby-name", 199);
-        Fragment f = getClientTestHelper().parseUri("2011-HAZEL.xml", "baby-name");
+        List<String> uris = getClientTestHelper().getUrisInCollection("baby-name", 199);
+        Fragment f = getClientTestHelper().parseUri(uris.get(0));
         f.assertElementExists("Expecting birth year", "/baby-name/birthYear");
         f.assertElementExists("Expecting birth year", "/baby-name/create_date");
     }
@@ -43,7 +51,8 @@ public class ImportNycBabiesTest extends AbstractJobRunnerTest {
         jpb.addString("uri_transform", "com.marklogic.batch.delimited.support.BabyNameUriGenerator");
         JobExecution jobExecution = getJobLauncherTestUtils().launchJob(jpb.toJobParameters());
         getClientTestHelper().assertCollectionSize("Expecting 199 files in baby-name collection", "baby-name", 199);
-        getClientTestHelper().parseUri("2011-HAZEL.xml", "baby-name");
+        List<String> uris = getClientTestHelper().getUrisInCollection("baby-name", 199);
+        assertThat(uris.get(0), startsWith("/2011/"));
     }
 
     @Test
@@ -62,7 +71,8 @@ public class ImportNycBabiesTest extends AbstractJobRunnerTest {
         jpb.addString("uri_transform", "com.marklogic.batch.delimited.support.BabyNameUriGenerator");
         JobExecution jobExecution = getJobLauncherTestUtils().launchJob(jpb.toJobParameters());
         getClientTestHelper().assertCollectionSize("Expecting 199 files in baby-name collection", "baby-name", 199);
-        Fragment f = getClientTestHelper().parseUri("2011-HAZEL.xml", "baby-name");
+        List<String> uris = getClientTestHelper().getUrisInCollection("baby-name", 199);
+        Fragment f = getClientTestHelper().parseUri(uris.get(0), "baby-name");
         f.assertElementExists("Expecting default delimited root name", "/record");
 
 
