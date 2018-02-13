@@ -30,8 +30,6 @@ import org.springframework.validation.BindException;
 
 import java.util.*;
 
-import static java.lang.ClassLoader.getSystemClassLoader;
-
 @EnableBatchProcessing
 @Import(value = {com.marklogic.spring.batch.config.MarkLogicBatchConfiguration.class})
 @PropertySource("classpath:job.properties")

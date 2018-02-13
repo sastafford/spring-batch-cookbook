@@ -28,6 +28,14 @@ Import a delimited file containing the most popular baby names in New York City 
 
 After job executes, there will be 13962 documents that exist in the target database in the 'baby-name' collection.
 
+## fixed width
+
+Import a [fixed width file](https://github.com/sastafford/spring-batch-cookbook/blob/dev/fixed-width/src/test/resources/popular-baby-names.txt) containing the most popular baby names in New York into MarkLogic.  
+ 
+     gradlew importFixedWidthFile
+
+After job executes, there will be 13962 names in your target MarkLogic database.  
+
 ## tika 
 
 The [Apache Tika](https://tika.apache.org/) toolkit detects and extracts metadata and text from over a thousand different file types.  This job uses Apache Tika to extract metadata content and ingest into MarkLogic.
