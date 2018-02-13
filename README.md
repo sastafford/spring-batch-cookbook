@@ -20,14 +20,6 @@ Before running a program, review the job.properties file in the project root dir
     marklogic.username=admin
     marklogic.password=admin
 
-## delimited 
-
-Import a delimited file containing the most popular baby names in New York City into MarkLogic.  This job demonstrates adding a year prefix to the URI and adding a createDateTime to the document.  
-
-     gradlew importBabyNames
-
-After job executes, there will be 13962 documents that exist in the target database in the 'baby-name' collection.
-
 ## fixed width
 
 Import a [fixed width file](https://github.com/sastafford/spring-batch-cookbook/blob/dev/fixed-width/src/test/resources/popular-baby-names.txt) containing the most popular baby names in New York into MarkLogic.  
@@ -55,3 +47,14 @@ After the job executes, there should be 50 customer documents in the CUSTOMER co
 To view the contents of the invoice relational database, use the following command. 
 
      gradlew runH2DataManager
+
+## delimited 
+
+Import a delimited file containing the most popular baby names in New York City into MarkLogic.  This job demonstrates adding a year prefix to the URI and adding a createDateTime to the document.  
+
+     gradlew importBabyNames
+
+After job executes, there will be 13962 documents that exist in the target database in the 'baby-name' collection.
+
+The basic functionality of this program can also be executed with MarkLogic Content Pump.  In the case, where you may have multiple rows per record, need to skip lines, or have special formatting considerations, then this implementation should be considered.
+
