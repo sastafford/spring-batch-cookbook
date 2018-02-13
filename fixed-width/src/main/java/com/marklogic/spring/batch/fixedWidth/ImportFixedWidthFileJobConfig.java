@@ -3,16 +3,8 @@ package com.marklogic.spring.batch.fixedWidth;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.document.DocumentWriteOperation;
 import com.marklogic.client.ext.helper.DatabaseClientProvider;
-import com.marklogic.client.io.DocumentMetadataHandle;
-import com.marklogic.client.io.StringHandle;
-import com.marklogic.client.io.marker.AbstractWriteHandle;
-import com.marklogic.client.io.marker.DocumentMetadataWriteHandle;
-import com.marklogic.spring.batch.columnmap.ColumnMapSerializer;
-import com.marklogic.spring.batch.columnmap.JacksonColumnMapSerializer;
 import com.marklogic.spring.batch.columnmap.XmlStringColumnMapSerializer;
-import com.marklogic.spring.batch.item.processor.AbstractMarkLogicItemProcessor;
 import com.marklogic.spring.batch.item.processor.ColumnMapProcessor;
-import com.marklogic.spring.batch.item.processor.MarkLogicItemProcessor;
 import com.marklogic.spring.batch.item.processor.support.UriGenerator;
 import com.marklogic.spring.batch.item.writer.MarkLogicItemWriter;
 import org.slf4j.Logger;
@@ -23,7 +15,6 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
@@ -50,7 +41,7 @@ public class ImportFixedWidthFileJobConfig {
 
     // This is the bean label for the name of your Job.  Pass this label into the job_id parameter
     // when using the CommandLineJobRunner
-    private final String JOB_NAME = "importFixedWidthFileJob";
+    private final String JOB_NAME = "importFixedWidthFile";
 
     /**
      * The JobBuilderFactory and Step parameters are injected via the EnableBatchProcessing annotation.

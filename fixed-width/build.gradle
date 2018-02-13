@@ -13,3 +13,12 @@ dependencies {
     testCompile 'com.marklogic:marklogic-spring-batch-test:1.+'
     testCompile "com.marklogic:ml-junit:3.1.0"
 }
+
+task importFixedWidthFile(type: JavaExec) {
+    main = 'com.marklogic.spring.batch.core.launch.support.CommandLineJobRunner'
+    classpath = sourceSets.main.runtimeClasspath + files("../")
+    args = ["--job_path", "com.marklogic.spring.batch.fixedWidth.ImportFixedWidthFileJobConfig",
+            "--job_id", "importFixedWidthFile",
+            "--input_file_path", "./src/test/resources/popular-baby-names.txt",
+            "--next"]
+}
