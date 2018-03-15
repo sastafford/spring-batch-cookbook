@@ -1,0 +1,8 @@
+{"index":"5hz2015"}
+{"query" : {"bool": {"must":[{"match":{"MONTH":10}},{"match":{"YEAR":2015}}]}},"size" :10}
+
+{"query" : {"bool": {"must":[{"match":{"HRS":15}},{"match":{"DAY":14}},{"match":{"MONTH":10}},{"match":{"YEAR":2015}}],"filter":[{"range":{"MINE":{"lt":30}}}]}},"size" :10}
+
+{"query" : {"bool": {"must":[{"match":{"HRS":15}},{"match":{"DAY":14}},{"match":{"MONTH":10}},{"match":{"YEAR":2015}}],"filter":[{"range":{"MINE":{"gte":30}}}]}},"size" :10}
+
+{"query" : {"bool": {"must":[{"match":{"HRS":15}},{"match":{"DAY":14}},{"match":{"MONTH":10}},{"match":{"YEAR":2015}}],"filter":[{"range":{"MINE":{"gte":30}}}]}},"size" :10}
