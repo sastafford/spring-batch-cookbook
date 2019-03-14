@@ -1,6 +1,8 @@
 rootProject.name = 'cookbook'
 
+include "hello-world"
 include "tika"
 include "delimited"
 include "rdbms"
 include "fixed-width"
+
